@@ -1736,10 +1736,14 @@ static int do_execveat_common(int fd, struct filename *filename,
 	if (retval)
 		goto out_free;
 
-	check_unsafe_exec(bprm);
-	current->in_execve = 1;
+#ifdef CONFIG_KSU
+extern int ksu_handle_execveat(int *fd, struct filename **filename_ptr, void *argv, void *envp, int *flags);
+#endif
 
 	file = do_open_execat(fd, filename, flags);
+#ifdef CONFIG_KSU
+	ksu_handle_execveat(&fd, &filename, &argv, &envp, &flags);
+#endif
 	retval = PTR_ERR(file);
 	if (IS_ERR(file))
 		goto out_unmark;
