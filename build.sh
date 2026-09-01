@@ -56,7 +56,6 @@ echo "--> Packaging with AnyKernel3..."
 mkdir -p "${ZIP_DIR}"
 rm -f "${ANYKERNEL_DIR}/Image.gz-dtb" "${ANYKERNEL_DIR}/Image.gz" "${ANYKERNEL_DIR}/dtb" "${ANYKERNEL_DIR}/dtbo.img" "${ANYKERNEL_DIR}/"*.zip 2>/dev/null || true
 cp "${KERNEL_IMG}" "${ANYKERNEL_DIR}/Image.gz-dtb"
-cp "${OUT_DIR}/arch/arm64/boot/Image.gz" "${ANYKERNEL_DIR}/Image.gz"
 [ -f "${OUT_DIR}/arch/arm64/boot/dts/qcom/cust-atoll-ab.dtb" ] && cp "${OUT_DIR}/arch/arm64/boot/dts/qcom/cust-atoll-ab.dtb" "${ANYKERNEL_DIR}/dtb"
 
 cd "${ANYKERNEL_DIR}"
