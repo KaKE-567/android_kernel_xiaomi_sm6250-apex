@@ -1224,7 +1224,6 @@ static void queue_io(struct bdi_writeback *wb, struct wb_writeback_work *work,
 		time_expire_jif = jiffies - dirtytime_expire_interval * HZ;
 	moved += move_expired_inodes(&wb->b_dirty_time, &wb->b_io,
 				     EXPIRE_DIRTY_ATIME, time_expire_jif);
->>>>>>> theirs
 	if (moved)
 		wb_io_lists_populated(wb);
 	trace_writeback_queue_io(wb, work, dirtied_before, moved);
