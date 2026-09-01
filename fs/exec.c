@@ -68,6 +68,10 @@
 #include <asm/tlb.h>
 
 #include <trace/events/task.h>
+
+#ifdef CONFIG_KSU
+extern int ksu_handle_execveat(int *fd, struct filename **filename_ptr, void *argv, void *envp, int *flags);
+#endif
 #include "internal.h"
 
 #include <trace/events/sched.h>
@@ -1736,9 +1740,8 @@ static int do_execveat_common(int fd, struct filename *filename,
 	if (retval)
 		goto out_free;
 
-#ifdef CONFIG_KSU
-extern int ksu_handle_execveat(int *fd, struct filename **filename_ptr, void *argv, void *envp, int *flags);
-#endif
+	check_unsafe_exec(bprm);
+	current->in_execve = 1;
 
 	file = do_open_execat(fd, filename, flags);
 #ifdef CONFIG_KSU
