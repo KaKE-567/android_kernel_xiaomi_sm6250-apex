@@ -305,4 +305,6 @@ static inline __must_check size_t __ab_c_size(size_t n, size_t size, size_t c)
 	*_d = (_a_full << _to_shift);					\
 	(_to_shift != _s || *_d < 0 || _a < 0 ||			\
 		(*_d >> _to_shift) != _a);				\
+})
+
 #endif /* __LINUX_OVERFLOW_H */
