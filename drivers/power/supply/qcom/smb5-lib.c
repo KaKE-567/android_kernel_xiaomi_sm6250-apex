@@ -2990,36 +2990,32 @@ static int smblib_therm_charging(struct smb_charger *chg)
 int smblib_set_prop_battery_charging_enabled(struct smb_charger *chg,
 			  const union power_supply_propval *val)
 {
-	int rc = 0;
+  int rc;
 
-	if (!chg)
-		return -EINVAL;
+  smblib_dbg(chg, PR_MISC, "%s intval= %x\n",__FUNCTION__,val->intval);
 
-	if (chg->chg_disable_votable) {
-		rc = vote(chg->chg_disable_votable, USER_VOTER, !val->intval, 0);
-		if (rc < 0)
-			smblib_err(chg, "Couldn't vote to %s charging rc=%d\n",
-				val->intval ? "enable" : "disable", rc);
-	}
+  if (1 == val->intval) {
+	  rc = smblib_masked_write(chg, CHARGING_ENABLE_CMD_REG,
+		  CHARGING_ENABLE_CMD_BIT,CHARGING_ENABLE_CMD_BIT);
+	  if (rc < 0) {
+		  smblib_err(chg, "Couldn't enable charging rc=%d\n",
+					  rc);
+		  return rc;
+	  }
+  }
+  else if (0 == val->intval) {
+	  rc = smblib_masked_write(chg, CHARGING_ENABLE_CMD_REG,
+		  CHARGING_ENABLE_CMD_BIT,0);
+	  if (rc < 0) {
+		  smblib_err(chg, "Couldn't disable charging rc=%d\n",
+					  rc);
+		  return rc;
+	  }
+  }
+  else
+	  smblib_err(chg, "Couldn't disable charging rc=%d\n",rc);
 
-	if (val->intval) {
-		rc = smblib_masked_write(chg, CHARGING_ENABLE_CMD_REG,
-			CHARGING_ENABLE_CMD_BIT, CHARGING_ENABLE_CMD_BIT);
-		if (rc < 0) {
-			smblib_err(chg, "Couldn't enable charging rc=%d\n", rc);
-			return rc;
-		}
-	} else {
-		rc = smblib_masked_write(chg, CHARGING_ENABLE_CMD_REG,
-			CHARGING_ENABLE_CMD_BIT, 0);
-		if (rc < 0) {
-			smblib_err(chg, "Couldn't disable charging rc=%d\n", rc);
-			return rc;
-		}
-	}
-
-	power_supply_changed(chg->batt_psy);
-	return 0;
+  return 0;
 }
 extern union power_supply_propval lct_therm_lvl_reserved;
 extern bool lct_backlight_off;
