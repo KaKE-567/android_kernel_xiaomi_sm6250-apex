@@ -284,7 +284,7 @@
 
 int sysctl_tcp_min_tso_segs __read_mostly = 2;
 
-int sysctl_tcp_autocorking __read_mostly = 1;
+int sysctl_tcp_autocorking __read_mostly = 0;
 
 struct percpu_counter tcp_orphan_count;
 EXPORT_SYMBOL_GPL(tcp_orphan_count);
@@ -3577,8 +3577,8 @@ void __init tcp_init(void)
 	sysctl_tcp_wmem[2] = max(64*1024, max_wshare);
 
 	sysctl_tcp_rmem[0] = SK_MEM_QUANTUM;
-	sysctl_tcp_rmem[1] = 87380;
-	sysctl_tcp_rmem[2] = max(87380, max_rshare);
+	sysctl_tcp_rmem[1] = 131072;
+	sysctl_tcp_rmem[2] = max(131072, max_rshare);
 
 	pr_info("Hash tables configured (established %u bind %u)\n",
 		tcp_hashinfo.ehash_mask + 1, tcp_hashinfo.bhash_size);
