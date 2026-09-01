@@ -1023,6 +1023,6 @@ void __init swap_setup(void)
 	 * _really_ don't want to cluster much more
 	 */
 #if defined(CONFIG_ZRAM) || defined(CONFIG_ZSWAP)
-	page_cluster = 1;
+	page_cluster = 0;
 #endif
 }
