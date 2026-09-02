@@ -30,6 +30,27 @@ To build this kernel without compilation errors or LLVM mismatch issues, use **L
 
 ---
 
+## KernelSU / MamboSU Driver Setup
+
+The core kernel files (`fs/exec.c`, `fs/open.c`, `fs/stat.c`) are already patched with manual hooks.
+
+The external KernelSU driver repository is not bundled directly in this tree, so you must fetch the **`xxksu`** branch before compiling:
+
+```bash
+# 1. Clone MamboSU (xxksu branch)
+git clone https://github.com/RapliVx/KernelSU -b xxksu KernelSU
+
+# 2. Symlink the driver into the kernel tree
+ln -sf ../KernelSU/kernel drivers/kernelsu
+```
+
+*Or via setup script:*
+```bash
+curl -LSs "https://raw.githubusercontent.com/RapliVx/KernelSU/xxksu/kernel/setup.sh" | bash -s xxksu
+```
+
+---
+
 ## Standalone Build Instructions
 
 ### 1. Setup Toolchain Environment
@@ -97,7 +118,7 @@ TARGET_KERNEL_ADDITIONAL_FLAGS := \
 ## Kernel Features & Architecture
 
 ### 1. Root & System
-- **In-Tree MamboSU (KernelSU `xxksu`)**: Integrated directly in `drivers/kernelsu` with non-intrusive manual hooks in `fs/exec.c`, `fs/open.c`, and `fs/stat.c`.
+- **MamboSU Support (KernelSU `xxksu`)**: Pre-hooked with clean manual hooks in `fs/exec.c`, `fs/open.c`, and `fs/stat.c` (driver pulled via `RapliVx/KernelSU:xxksu`).
 
 ### 2. Memory & 4GB RAM Optimization
 - **ZRAM Compression**: Default compressor hardcoded to **LZ4** for 3–4x faster decompression.
