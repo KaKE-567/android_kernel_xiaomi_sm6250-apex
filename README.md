@@ -6,7 +6,7 @@ Custom, high-performance Linux 4.14 kernel for Xiaomi SM6250 devices (curtana, c
 
 ## Device & Platform Specs
 
-- **SoC**: Qualcomm Snapdragon 720G / 730 / 732G (SM6250 / atoll)
+- **SoC**: Qualcomm Snapdragon 720G (SM6250 / atoll)
 - **Linux Base**: 4.14.203
 - **Target OS**: Android 11 (LineageOS 18.1 / AOSP)
 - **Target Defconfig**: `cust_defconfig`
