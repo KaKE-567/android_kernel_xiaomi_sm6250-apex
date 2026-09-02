@@ -51,12 +51,20 @@ if [ ! -f "${KERNEL_IMG}" ]; then
 fi
 echo "--> Kernel build completed successfully: ${KERNEL_IMG}"
 
+# 3.5 Generate dtbo.img from compiled overlay dtbo files
+if ls "${OUT_DIR}"/arch/arm64/boot/dts/qcom/*overlay.dtbo 1> /dev/null 2>&1; then
+    echo "--> Creating dtbo.img for unified miatoll devices..."
+    python3 "${KERNEL_DIR}/scripts/mkdtboimg.py" create "${OUT_DIR}/arch/arm64/boot/dtbo.img" \
+            "${OUT_DIR}"/arch/arm64/boot/dts/qcom/*overlay.dtbo
+fi
+
 # 4. AnyKernel3 Packaging
 echo "--> Packaging with AnyKernel3..."
 mkdir -p "${ZIP_DIR}"
 rm -f "${ANYKERNEL_DIR}/Image.gz-dtb" "${ANYKERNEL_DIR}/Image.gz" "${ANYKERNEL_DIR}/dtb" "${ANYKERNEL_DIR}/dtbo.img" "${ANYKERNEL_DIR}/"*.zip 2>/dev/null || true
 cp "${KERNEL_IMG}" "${ANYKERNEL_DIR}/Image.gz-dtb"
 [ -f "${OUT_DIR}/arch/arm64/boot/dts/qcom/cust-atoll-ab.dtb" ] && cp "${OUT_DIR}/arch/arm64/boot/dts/qcom/cust-atoll-ab.dtb" "${ANYKERNEL_DIR}/dtb"
+[ -f "${OUT_DIR}/arch/arm64/boot/dtbo.img" ] && cp "${OUT_DIR}/arch/arm64/boot/dtbo.img" "${ANYKERNEL_DIR}/dtbo.img"
 
 cd "${ANYKERNEL_DIR}"
 zip -r9 "${ZIP_DIR}/${ZIP_NAME}" * -x .git README.md *placeholder
