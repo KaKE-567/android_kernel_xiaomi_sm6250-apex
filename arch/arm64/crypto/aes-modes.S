@@ -267,6 +267,10 @@ AES_ENDPROC(aes_cbc_decrypt)
 	 *		   int blocks, u8 ctr[], int first)
 	 */
 
+	.align		4
+.Lctr_addends:
+	.quad		0x0000000200000001, 3
+
 AES_ENTRY(aes_ctr_encrypt)
 	FRAME_PUSH
 	cbz		w6, .Lctrnotfirst	/* 1st time around? */
@@ -297,7 +301,7 @@ AES_ENTRY(aes_ctr_encrypt)
 	eor		v1.16b, v1.16b, v3.16b
 	st1		{v0.16b-v1.16b}, [x0], #32
 #else
-	ldr		q8, =0x30000000200000001	/* addends 1,2,3[,0] */
+	ldr		q8, .Lctr_addends		/* addends 1,2,3[,0] */
 	dup		v7.4s, w8
 	mov		v0.16b, v4.16b
 	add		v7.4s, v7.4s, v8.4s
